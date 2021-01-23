@@ -1,3 +1,6 @@
+autoload -U compinit
+compinit -i
+
 ## prompt表示
 # --example
 # usr-name_Green:curent-directory_Cian (git-branch)_Purple yy/mm/dd HH:MM:SS_Yellow

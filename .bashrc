@@ -40,6 +40,11 @@ if [ -f ${HOME}/dotfiles/git/git-prompt.sh ]; then
     PS1=${PS_HEAD}${PURPLE}'$(__git_ps1 " (%s)") '${PS_TAIL}
 fi
 
+# gh completion
+if type gh > /dev/null 2>&1; then
+    eval "$(gh completion -s bash)"
+fi
+
 ### ALIASES
 if [ -f ${HOME}/.aliases ]; then
     source ${HOME}/.aliases
