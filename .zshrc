@@ -15,12 +15,14 @@ PROMPT="${PS_HEAD} ${PS_TAIL}
  $ "
 RPROMPT='return:[%?]'
 
-# git setup
+## git setup
+# completion
 if [ -f ${HOME}/dotfiles/git/_git ]; then
     fpath=(~/.zsh $fpath)
     zstyle ':completion:*:*:git:*' script ~/dotfiles/git-completion.bash
     autoload -Uz compinit && compinit
 fi
+# git-prompt
 if [ -f ${HOME}/dotfiles/git/git-prompt.sh ]; then
     source ${HOME}/dotfiles/git/git-prompt.sh
 
@@ -34,17 +36,25 @@ if [ -f ${HOME}/dotfiles/git/git-prompt.sh ]; then
  $ "
 fi
 
-### ALIASES
+## set keybind
+# CTRL + <RIGHT>
+bindkey ";5C" forward-word
+# CTRL + <LEFT>
+bindkey ";5D" backward-word
+
+## set Alert mode
+setopt no_beep
+
+## load aliases
 if [ -f ${HOME}/.aliases ]; then
     source ${HOME}/.aliases
 fi
 
-# set PATH so it includes user's private bin if it exists
+## add PATH
 if [ -d "${HOME}/bin" ] ; then
     PATH="${HOME}/bin:${PATH}"
 fi
 
-# set PATH so it includes user's private bin if it exists
 if [ -d "${HOME}/.local/bin" ] ; then
     PATH="${HOME}/.local/bin:${PATH}"
 fi
