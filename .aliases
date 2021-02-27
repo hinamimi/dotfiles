@@ -18,14 +18,16 @@ alias du='du -h'
 alias relogin='exec ${SHELL} -l'
 
 # online-judge-tools用エイリアス
-alias oj-s-pypy='oj s -y --no-open -l 4047'
-alias oj-s='oj s -y --no-open'
+if type oj > /dev/null 2>&1; then
+    alias oj-s-pypy='oj s -y --no-open -l 4047'
+    alias oj-s='oj s -y --no-open'
 
-function oj-t-py(){
-    DIR=`dirname $1`
-    command oj test -c "python3 $1" -d ${DIR}/test
-}
-function oj-t-pypy(){
-    DIR=`dirname $1`
-    command oj test -c "pypy3 $1" -d ${DIR}/test
-}
+    function oj-t-py(){
+        DIR=`dirname $1`
+        command oj test -c "python3 $1" -d ${DIR}/test
+    }
+    function oj-t-pypy(){
+        DIR=`dirname $1`
+        command oj test -c "pypy3 $1" -d ${DIR}/test
+    }
+fi
