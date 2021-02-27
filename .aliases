@@ -1,5 +1,4 @@
-## 汎用コマンド
-
+## General Alias
 alias ls='ls --color=auto'
 alias la='ls -A'
 alias ll='ls -lhA'
@@ -17,7 +16,15 @@ alias du='du -h'
 
 alias relogin='exec ${SHELL} -l'
 
-# online-judge-tools用エイリアス
+# Windows WSL Alias
+if type wsl.exe > /dev/null 2>&1; then
+    alias wsl=wsl.exe
+fi
+if type clip.exe > /dev/null 2>&1; then
+    alias clip=clip.exe
+fi
+
+# online-judge-tools Alias
 if type oj > /dev/null 2>&1; then
     alias oj-s-pypy='oj s -y --no-open -l 4047'
     alias oj-s='oj s -y --no-open'
