@@ -43,10 +43,57 @@ if [ -f ${HOME}/dotfiles/git/git-prompt.sh ]; then
 fi
 
 ## set keybind
-# CTRL + <RIGHT>
+function mark() {
+  ((REGION_ACTIVE)) || zle set-mark-command
+  zle $1
+}
+function delete-region() {
+    zle kill-region
+    CUTBUFFER=$killring[1]
+    shift killring
+}
+zle -N delete-region
+
+function backward-delete-char-or-region() {
+    if [ $REGION_ACTIVE -eq 0 ]; then
+        zle backward-delete-char
+    else
+        zle delete-region
+    fi
+}
+zle -N backward-delete-char-or-region
+
+function delete-char-or-list-or-region() {
+    if [ $REGION_ACTIVE -eq 0 ]; then
+        zle delete-char-or-list
+    else
+        zle delete-region
+    fi
+}
+zle -N delete-char-or-list-or-region
+
+mark-forward-char() mark forward-char
+mark-backward-char() mark backward-char
+mark-forward-word() mark forward-word
+mark-backward-word() mark backward-word
+zle -N mark-forward-char
+zle -N mark-backward-char
+zle -N mark-forward-word
+zle -N mark-backward-word
+
+# CTRL + RIGHT | LEFT
 bindkey ";5C" forward-word
-# CTRL + <LEFT>
 bindkey ";5D" backward-word
+# SHIFT + RIGHT | LEFT
+bindkey ";2C" mark-forward-char
+bindkey ";2D" mark-backward-char
+# CTRL + SHIFT + LEFT | RIGHT
+bindkey ";6C" mark-forward-word
+bindkey ";6D" mark-backward-word
+# Delete
+bindkey "\e[3~" delete-char-or-list-or-region
+# BackSpace
+bindkey "^?" backward-delete-char-or-region
 
 ## set Alert mode
 setopt no_beep
