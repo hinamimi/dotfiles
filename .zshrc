@@ -90,9 +90,8 @@ bindkey ";2D" mark-backward-char
 # CTRL + SHIFT + LEFT | RIGHT
 bindkey ";6C" mark-forward-word
 bindkey ";6D" mark-backward-word
-# Delete
+# Delete | BackSpace
 bindkey "\e[3~" delete-char-or-list-or-region
-# BackSpace
 bindkey "^?" backward-delete-char-or-region
 
 ## set Alert mode
