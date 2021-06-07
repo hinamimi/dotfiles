@@ -1,6 +1,25 @@
 autoload -U compinit
 compinit -i
 
+export HISTFILE=~/.zsh_history
+export HISTSIZE=10000
+export SAVEHIST=10000
+setopt hist_ignore_dups
+setopt hist_ignore_all_dups
+setopt share_history
+setopt hist_no_store
+zshaddhistory() {
+    local line=${1%%$'\n'}
+    local cmd=${line%% *}
+
+    [[ ${#line} -ge 5
+        && ${cmd} != ls
+        && ${cmd} != ll
+        && ${cmd} != la
+        && ${cmd} != cd
+    ]]
+}
+
 ## prompt display
 # --example
 # usr-name_Green:curent-directory_Cian (git-branch)_Purple yy/mm/dd HH:MM:SS_Yellow
