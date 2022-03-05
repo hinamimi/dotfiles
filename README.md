@@ -7,5 +7,5 @@ And execute `~/dotfiles/makelink.sh`
 
 ## Feedback
 
-Suggestions/improvements
+Suggestions or improvements
 [welcome](https://github.com/mathiasbynens/dotfiles/issues)!

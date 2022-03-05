@@ -70,3 +70,7 @@ fi
 if [ -d "${HOME}/.local/bin" ] ; then
     PATH="${HOME}/.local/bin:${PATH}"
 fi
+
+## -----------------------------------------------------------------------------
+### ローカル専用のコンフィグはこっちに書く
+[ -f ${HOME}/.bashrc_local ] && . ${HOME}/.bashrc_local

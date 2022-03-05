@@ -1,26 +1,50 @@
-autoload -U compinit
-compinit -i
+autoload -Uz compinit && compinit -i
+
+## -----------------------------------------------------------------------------
+### Setting up HISTORY FILE
 
 export HISTFILE=~/.zsh_history
 export HISTSIZE=10000
 export SAVEHIST=10000
+
 setopt hist_ignore_dups
 setopt hist_ignore_all_dups
 setopt share_history
 setopt hist_no_store
+setopt extended_history
+
 zshaddhistory() {
     local line=${1%%$'\n'}
     local cmd=${line%% *}
 
     [[ ${#line} -ge 5
+        && ${cmd} != cd
         && ${cmd} != ls
         && ${cmd} != ll
         && ${cmd} != la
-        && ${cmd} != cd
+        && ${cmd} != which
     ]]
 }
 
-## prompt display
+## -----------------------------------------------------------------------------
+## set Alert mode
+setopt no_beep
+
+## -----------------------------------------------------------------------------
+### Setting up PROMPT
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+## -----------------------------------------------------------------------------
+### Setting up PROMPT
 # --example
 # usr-name_Green:curent-directory_Cian (git-branch)_Purple yy/mm/dd HH:MM:SS_Yellow
 # $ cmd
@@ -28,40 +52,46 @@ zshaddhistory() {
 # %B...%b <= Bold font
 # %F{color}...%f <= Foreground(Character) color
 # %K{color}...%k <= Backgrount color
-PS_HEAD='%B%F{green}%n%f%F{white}:%f%F{cyan}%~%f%b'
-PS_TAIL='%B%F{yellow}%D{%y/%m/%d %H:%M:%S} %f%b'
-PROMPT="${PS_HEAD} ${PS_TAIL}
- $ "
-RPROMPT='return:[%?]'
 
-## Default install
-# if not in `tree` then install `tree`
-for CMD in tree git; do
+# PS_HEAD='%B%F{green}%n%f%F{white}:%f%F{cyan}%~%f%b'
+# PS_TAIL='%B%F{yellow}%D{%y/%m/%d %H:%M:%S} %f%b'
+# PROMPT="${PS_HEAD} ${PS_TAIL}
+#  $ "
+# RPROMPT='return:[%?]'
+
+## -----------------------------------------------------------------------------
+### Default install
+# e.g. if not in `tree` then install `tree`
+for CMD in curl tree git; do
     type ${CMD} > /dev/null 2>&1 || sudo apt-get install -y ${CMD}
 done
 
-## git setup
-# completion
-if [ -f ${HOME}/dotfiles/git/_git ]; then
-    fpath=(~/.zsh $fpath)
-    zstyle ':completion:*:*:git:*' script ~/dotfiles/git-completion.bash
-    autoload -Uz compinit && compinit
-fi
-# git-prompt
-if [ -f ${HOME}/dotfiles/git/git-prompt.sh ]; then
-    source ${HOME}/dotfiles/git/git-prompt.sh
+## -----------------------------------------------------------------------------
+### Setting up GIT
 
-    GIT_PS1_SHOWDIRTYSTATE=true
-    GIT_PS1_SHOWUNTRACKEDFILES=true
-    GIT_PS1_SHOWSTASHSTATE=true
-    GIT_PS1_SHOWUPSTREAM=auto
+# # completion
+# if [ -f ${HOME}/dotfiles/git/_git ] && [ -f ${HOME}/dotfiles/git/git-completion.bash ]; then
+#     fpath=(~/.zsh $fpath)
+#     zstyle ':completion:*:*:git:*' script ~/dotfiles/git/git-completion.bash
+#     autoload -Uz compinit && compinit
+# fi
+# # git-prompt
+# if [ -f ${HOME}/dotfiles/git/git-prompt.sh ]; then
+#     source ${HOME}/dotfiles/git/git-prompt.sh
 
-    setopt prompt_subst
-    PROMPT=${PS_HEAD}'%F{magenta}$(__git_ps1 " (%s)")%f '${PS_TAIL}"
- $ "
-fi
+#     GIT_PS1_SHOWDIRTYSTATE=true
+#     GIT_PS1_SHOWUNTRACKEDFILES=true
+#     GIT_PS1_SHOWSTASHSTATE=true
+#     GIT_PS1_SHOWUPSTREAM=auto
 
-## set keybind
+#     setopt prompt_subst
+#     PROMPT=${PS_HEAD}'%F{magenta}$(__git_ps1 " (%s)")%f '${PS_TAIL}"
+#  $ "
+# fi
+
+## -----------------------------------------------------------------------------
+### Setting up KEYBIND
+
 function mark() {
   ((REGION_ACTIVE)) || zle set-mark-command
   zle $1
@@ -113,15 +143,14 @@ bindkey ";6D" mark-backward-word
 bindkey "\e[3~" delete-char-or-list-or-region
 bindkey "^?" backward-delete-char-or-region
 
-## set Alert mode
-setopt no_beep
+## -----------------------------------------------------------------------------
+### ADD PATH
 
 ## load aliases
 if [ -f ${HOME}/.aliases ]; then
     source ${HOME}/.aliases
 fi
 
-## add PATH
 if [ -d "${HOME}/bin" ] ; then
     PATH="${HOME}/bin:${PATH}"
 fi
@@ -130,32 +159,54 @@ if [ -d "${HOME}/.local/bin" ] ; then
     PATH="${HOME}/.local/bin:${PATH}"
 fi
 
+## -----------------------------------------------------------------------------
+### Zinit installzation -> https://github.com/zdharma-continuum/zinit
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/master/doc/install.sh)"
+# zinit self-update
+
 ### Added by Zinit's installer
-if [[ ! -f $HOME/.zinit/bin/zinit.zsh ]]; then
-    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
-    command mkdir -p "$HOME/.zinit" && command chmod g-rwX "$HOME/.zinit"
-    command git clone https://github.com/zdharma/zinit "$HOME/.zinit/bin" && \
+if [[ ! -f ${HOME}/.zinit/bin/zinit.zsh ]]; then
+    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    command mkdir -p "${HOME}/.zinit" && command chmod g-rwX "${HOME}/.zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "${HOME}/.zinit/bin" && \
         print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \
         print -P "%F{160}▓▒░ The clone has failed.%f%b"
 fi
 
-source "$HOME/.zinit/bin/zinit.zsh"
+source "${HOME}/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
 # Load a few important annexes, without Turbo
 # (this is currently required for annexes)
 zinit light-mode for \
-    zinit-zsh/z-a-rust \
-    zinit-zsh/z-a-as-monitor \
-    zinit-zsh/z-a-patch-dl \
-    zinit-zsh/z-a-bin-gem-node
+    zdharma-continuum/z-a-rust \
+    zdharma-continuum/z-a-as-monitor \
+    zdharma-continuum/z-a-patch-dl \
+    zdharma-continuum/z-a-bin-gem-node
 
 ### End of Zinit's installer chunk
 
-# 補完
-zinit light zsh-users/zsh-autosuggestions
+## -----------------------------------------------------------------------------
+### zinitによる拡張機能をインストールする
+### zinit ice wait'0': 非同期でプラグインを読み込むことができる -> 起動が早くなる
+### zinit ice wait'0!': ロードが終わったというログを表示しない
+
+# zsh-users           : Zsh community projects -> repository:  https://github.com/zsh-users
+# zdharma-continuum   : Contributer of zinit -> https://github.com/zdharma-continuum 
+# romkatv             : https://github.com/romkatv/powerlevel10k 
+
+## 補完
+# こいつがないと困るので非同期ロードすら拒否しておく
+zinit ice; zinit light zsh-users/zsh-autosuggestions
+zinit ice wait'!0'; zinit light zsh-users/zsh-completions
 # シンタックスハイライト
-zinit light zdharma/fast-syntax-highlighting
-# Ctrl+r でコマンド履歴を検索
-zinit light zdharma/history-search-multi-word
+zinit ice wait'!0'; zinit light zdharma-continuum/fast-syntax-highlighting
+# # Ctrl+r でコマンド履歴を検索
+zinit ice wait'!0'; zinit light zdharma-continuum/history-search-multi-word
+# ZshのツヨツヨテーマであるPowerlevel10kを使う
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+## -----------------------------------------------------------------------------
+### ローカル専用のコンフィグはこっちに書く
+[ -f ${HOME}/.zshrc_local ] && . ${HOME}/.zshrc_local
