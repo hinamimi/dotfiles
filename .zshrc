@@ -1,3 +1,7 @@
+## -----------------------------------------------------------------------------
+### Initializing
+
+# 保管機能を有効にして、実行する
 autoload -Uz compinit && compinit -i
 
 ## -----------------------------------------------------------------------------
@@ -9,6 +13,7 @@ export SAVEHIST=10000
 
 setopt hist_ignore_dups
 setopt hist_ignore_all_dups
+setopt hist_reduce_blanks
 setopt share_history
 setopt hist_no_store
 setopt extended_history
@@ -27,8 +32,14 @@ zshaddhistory() {
 }
 
 ## -----------------------------------------------------------------------------
-## set Alert mode
+### Setting up Z-shell options
+
+# ビープを出さない
 setopt no_beep
+# コマンド名が無い場合はその名前でcdを試みる
+setopt auto_cd
+# ディレクトリが見つからない場合に先頭に~をつけて試行する
+setopt cdable_vars
 
 ## -----------------------------------------------------------------------------
 ### Setting up PROMPT
@@ -192,9 +203,9 @@ zinit light-mode for \
 ### zinit ice wait'0': 非同期でプラグインを読み込むことができる -> 起動が早くなる
 ### zinit ice wait'0!': ロードが終わったというログを表示しない
 
-# zsh-users           : Zsh community projects -> repository:  https://github.com/zsh-users
-# zdharma-continuum   : Contributer of zinit -> https://github.com/zdharma-continuum 
-# romkatv             : https://github.com/romkatv/powerlevel10k 
+# zsh-users         : Zsh community projects -> repository:  https://github.com/zsh-users
+# zdharma-continuum : Contributer of zinit -> https://github.com/zdharma-continuum 
+# romkatv           : https://github.com/romkatv/powerlevel10k 
 
 ## 補完
 # こいつがないと困るので非同期ロードすら拒否しておく
