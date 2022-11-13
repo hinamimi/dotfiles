@@ -155,6 +155,14 @@ bindkey "\e[3~" delete-char-or-list-or-region
 bindkey "^?" backward-delete-char-or-region
 
 ## -----------------------------------------------------------------------------
+### EXPORT EDITOR
+if type code > /dev/null 2>&1; then
+    export EDITOR=code
+elif type vi > /dev/null 2>&1; then
+    export EDITOR=vi
+fi
+
+## -----------------------------------------------------------------------------
 ### ADD PATH
 
 ## load aliases
