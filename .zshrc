@@ -158,7 +158,7 @@ bindkey "^?" backward-delete-char-or-region
 ### ADD PATH
 
 ## load aliases
-if [ -f ${HOME}/.aliases ]; then
+if [ -f "${HOME}/.aliases" ] ; then
     source ${HOME}/.aliases
 fi
 
