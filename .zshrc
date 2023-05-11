@@ -228,4 +228,4 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 ## -----------------------------------------------------------------------------
 ### ローカル専用のコンフィグはこっちに書く
-[ -f ${HOME}/.zshrc_local ] && . ${HOME}/.zshrc_local
+[ -f ${HOME}/.zshrc_local ] && source ${HOME}/.zshrc_local
