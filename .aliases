@@ -7,7 +7,7 @@ darwin*)
   ;;
 linux*)
   alias ls='ls --color=auto'
-  alias ll='ll -lhA --color=auto'
+  alias ll='ls -lhA --color=auto'
   alias la='la -A --color=auto'
   ;;
 esac
