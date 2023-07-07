@@ -72,10 +72,12 @@ fi
 
 ## -----------------------------------------------------------------------------
 ### Default install
-# e.g. if not in `tree` then install `tree`
-for CMD in curl tree git; do
-    type ${CMD} > /dev/null 2>&1 || sudo apt-get install -y ${CMD}
-done
+if type sudo  > /dev/null 2>&1; then
+    # e.g. if not in `tree` then install `tree`
+    for CMD in curl tree git; do
+        type ${CMD} > /dev/null 2>&1 || sudo apt-get install -y ${CMD}
+    done
+fi
 
 ## -----------------------------------------------------------------------------
 ### Setting up GIT
@@ -157,7 +159,7 @@ bindkey "^?" backward-delete-char-or-region
 ## -----------------------------------------------------------------------------
 ### EXPORT EDITOR
 if type code > /dev/null 2>&1; then
-    export EDITOR=code
+    export EDITOR="code --wait"
 elif type vi > /dev/null 2>&1; then
     export EDITOR=vi
 fi
@@ -212,8 +214,8 @@ zinit light-mode for \
 ### zinit ice wait'0!': ロードが終わったというログを表示しない
 
 # zsh-users         : Zsh community projects -> repository:  https://github.com/zsh-users
-# zdharma-continuum : Contributer of zinit -> https://github.com/zdharma-continuum 
-# romkatv           : https://github.com/romkatv/powerlevel10k 
+# zdharma-continuum : Contributer of zinit -> https://github.com/zdharma-continuum
+# romkatv           : https://github.com/romkatv/powerlevel10k
 
 ## 補完
 # こいつがないと困るので非同期ロードすら拒否しておく
