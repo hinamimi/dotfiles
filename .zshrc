@@ -11,12 +11,13 @@ export HISTFILE=~/.zsh_history
 export HISTSIZE=10000
 export SAVEHIST=10000
 
+setopt extended_history
 setopt hist_ignore_dups
 setopt hist_ignore_all_dups
-setopt hist_reduce_blanks
-setopt share_history
 setopt hist_no_store
-setopt extended_history
+setopt hist_reduce_blanks
+setopt hist_save_no_dups
+setopt share_history
 
 zshaddhistory() {
     local line=${1%%$'\n'}
@@ -72,12 +73,14 @@ fi
 
 ## -----------------------------------------------------------------------------
 ### Default install
-if type sudo  > /dev/null 2>&1; then
-    # e.g. if not in `tree` then install `tree`
-    for CMD in curl tree git; do
-        type ${CMD} > /dev/null 2>&1 || sudo apt-get install -y ${CMD}
-    done
-fi
+
+## Ask your password
+# if type sudo  > /dev/null 2>&1; then
+#     # e.g. if not in `tree` then install `tree`
+#     for CMD in curl tree git; do
+#         type ${CMD} > /dev/null 2>&1 || sudo apt-get install -y ${CMD}
+#     done
+# fi
 
 ## -----------------------------------------------------------------------------
 ### Setting up GIT
@@ -216,6 +219,7 @@ zinit light-mode for \
 # zsh-users         : Zsh community projects -> repository:  https://github.com/zsh-users
 # zdharma-continuum : Contributer of zinit -> https://github.com/zdharma-continuum
 # romkatv           : https://github.com/romkatv/powerlevel10k
+# joshskidmore      : https://github.com/joshskidmore/zsh-fzf-history-search
 
 ## 補完
 # こいつがないと困るので非同期ロードすら拒否しておく
@@ -223,8 +227,13 @@ zinit ice; zinit light zsh-users/zsh-autosuggestions
 zinit ice wait'!0'; zinit light zsh-users/zsh-completions
 # シンタックスハイライト
 zinit ice wait'!0'; zinit light zdharma-continuum/fast-syntax-highlighting
-# # Ctrl+r でコマンド履歴を検索
-zinit ice wait'!0'; zinit light zdharma-continuum/history-search-multi-word
+# Ctrl+r でコマンド履歴を検索
+if type fzf > /dev/null 2>&1; then
+  zinit ice lucid wait'0'; zinit light joshskidmore/zsh-fzf-history-search
+else
+  zinit ice wait'!0'; zinit light zdharma-continuum/history-search-multi-word
+fi
+
 # ZshのツヨツヨテーマであるPowerlevel10kを使う
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
